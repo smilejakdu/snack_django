@@ -12,7 +12,7 @@ class Account(models.Model):
     birth    = models.CharField(max_length=250)
     gender   = models.CharField(max_length=250)
     post     = models.CharField(max_length=250)
-    kakao_id = models.IntegerField(max_length=250)
+    kakao_id = models.IntegerField(max_length=250 , null=True)
 
     class Meta:
         db_table = 'accounts'
