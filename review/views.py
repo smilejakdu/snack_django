@@ -42,6 +42,7 @@ class ReviewView(View):
         review_data = (Review.
                        objects.
                        filter(product_id = product_id).
+                       order_by(sort_by).
                        values()[offset:offset+limit])
 
         return JsonResponse({"message" : list(review_data)} , status=200)
