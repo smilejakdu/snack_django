@@ -34,18 +34,16 @@ class ReviewView(View):
         except Exception as e:
             return JsonResponse({"message" : e} , status=400)
 
-#        sort_by      = request.GET.get('sort_by', 'id')
-#        offset       = int(request.GET.get('offset', 0))
-#        limit        = int(request.GET.get('limit', 12))
-
     def get(self , request , product_id):
         sort_by = request.GET.get('sort_by' , 'id')
-
+        offset  = int(request.GET.get('offset' , 0))
+        limit   = int(request.GET.get('limit' , 20))
 
         review_data = (Review.
                        objects.
-                       filter(product_id = product_id)).values()
-        
+                       filter(product_id = product_id).
+                       values()[offset:offset+limit])
+
         return JsonResponse({"message" : list(review_data)} , status=200)
 
 class ReviewDetailView(View):
