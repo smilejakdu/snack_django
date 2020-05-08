@@ -1,4 +1,5 @@
-import jwt, bcrypt, json , re . requests
+import jwt, bcrypt, json , re , requests
+
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
@@ -9,10 +10,10 @@ from  django.http           import HttpResponse, JsonResponse
 
 from .utils                 import login_check
 from .models                import Account
+
 from snack_mart.my_settings import (SECRET_KEY,
                                     ALGORITHM,
                                     )
-
 
 class SignUpView(View):
 
@@ -43,7 +44,7 @@ class SignUpView(View):
             Account(
                 name     = data['name'],
                 user_id  = data['user_id'],
-                password   = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
+                password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
                 email    = data['email'],
                 phone    = data['phone'],
             ).save()
@@ -67,7 +68,9 @@ class SignInView(View):
             if Account.objects.filter(user_id =data['user_id']).exists():
                 account = Account.objects.get(user_id = data['user_id'])
 
-                if bcrypt.checkpw(data['password'].encode() , account.password.encode('utf-8')):
+                if bcrypt.checkpw(data['password'].encode() ,
+                                  account.password.encode('utf-8')):
+
                     token = jwt.encode({"user":account.id},
                                        SECRET_KEY['secret'],
                                        algorithm = ALGORITHM)
@@ -103,7 +106,8 @@ class ProfileView(View):
 
         try :
             if Account.objects.filter(user_id = account.user_id):
-                if bcrypt.checkpw(data['password'].encode('utf-8') , account.password.encode('utf-8')):
+                if bcrypt.checkpw(data['password'].encode('utf-8') ,
+                                  account.password.encode('utf-8')):
 
                     account.update(
                         user_id = data['user_id'],
@@ -129,7 +133,7 @@ class KakaoView(View):
     def post(self , request):
         access_token = request.headers.get('Authorization' , None)
 
-        if  access_token is None:
+        if access_token is None:
             return HttpResponse(status=400)
 
         try :
@@ -147,6 +151,7 @@ class KakaoView(View):
             kakao_email   = kakao_account.get('email'    , None)
 
             if Account.objects.filter(email=kakao_email).exists():
+
                 token = jwt.encode({'email' : kakao_email},
                                    SECRET_KEY['secret'],
                                    algorithm=ALGORITHM).decode("utf-8")

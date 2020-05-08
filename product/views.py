@@ -1,19 +1,21 @@
 import jwt, bcrypt, json
+
 from  django.db        import IntegrityError
 from  django.db.models import Count, Q , Sum
 from  django.views     import View
 from  django.http      import HttpResponse, JsonResponse
-from .models           import Category , Product , CategoryProduct
 
+from .models           import (Category,
+                               Product,
+                               CategoryProduct)
 
 class CategoryView(View):
     def get(self , request):
         data = Category.objects.values()
         return JsonResponse({"data" : list(data)} , status=200)
 
-
 class ProductView(View):
-    def get (self , request , category_name):
+    def get(self , request , category_name):
 
         try :
             sort_by = request.GET.get('sort_by' , 'id')
@@ -30,7 +32,7 @@ class ProductView(View):
                                    'retail_price',
                                   )[offset:offset+limit])
 
-            return JsonResponse({"data":list(product_info)},status=200)
+            return JsonResponse({"data":list(product_info)} , status=200)
 
         except ValueError:
             return JsonResponse({"ERROR":"VALUDE_ERROR"} , status=400)
@@ -52,24 +54,33 @@ class ProductDetailView(View):
         except TypeError:
             return JsonResponse({"ERROR" : "INVALID_TYPE"} , status=400)
 
+        except Product.DoesNotExist:
+            return JsonResponse({"error" : "doesnot_product"} , status=400)
+
         except Exception as e :
             return JsonResponse({"ERROR" : e} , status=400)
-
 
 class SearchView(View):
     def get(self , request):
         query = request.GET.get('keyword' , None)
+        try :
+            if len(query) > 0:
+                search_data = (Product.
+                               objects.
+                               filter(name__icontains=query).
+                               values('id' ,
+                                      'name' ,
+                                      'image',
+                                      'retail_price',
+                                      'price'))
 
-        if len(query) > 0:
-            search_data = (Product.
-                           objects.
-                           filter(Q(name__icontains=query)).
-                           values('id' ,
-                                  'name' ,
-                                  'image',
-                                  'retail_price',
-                                  'price'))
+                return JsonResponse({"data":search_data} , status=200)
 
-            return HttpResponse(status=200)
+        except ValueError:
+            return JsonResponse({"ERROR" : "invalid keyword"} , status=400)
 
-        return JsonResponse({"error" : "invalid keyword"} , status=400)
+        except NoneType:
+            return JsonResponse({"ERROR" : "NONETYPE_ERROR"} , status=400)
+
+        except Exception as e:
+            return JsonResponse({"ERROR":e},status=400)

@@ -15,7 +15,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -27,6 +26,7 @@ INSTALLED_APPS = [
     'account',
     'product',
     'basket',
+    'review',
 ]
 
 MIDDLEWARE = [
