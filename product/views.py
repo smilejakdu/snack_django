@@ -4,7 +4,7 @@ from  django.db        import IntegrityError
 from  django.db.models import Count, Q , Sum
 from  django.views     import View
 from  django.http      import HttpResponse, JsonResponse
-
+from review.models     import Review
 from .models           import (Category,
                                Product,
                                CategoryProduct)
