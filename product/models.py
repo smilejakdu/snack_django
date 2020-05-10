@@ -16,10 +16,10 @@ class CategoryProduct(models.Model):
         db_table="category_products"
 
 class Product(models.Model):
-    name             = models.CharField(max_length=250 , null=True)
+    name             = models.CharField(max_length=250)
     image            = models.CharField(max_length=500 , null=True)
-    retail_price     = models.CharField(max_length=250 , null=True)
-    price            = models.CharField(max_length=250 , null=True)
+    retail_price     = models.CharField(max_length=250)
+    price            = models.CharField(max_length=250)
     ingredient_image = models.CharField(max_length=500 , null=True)
     delivery_guide   = models.CharField(max_length=250 , null=True)
     created_at       = models.DateTimeField(auto_now_add=True)

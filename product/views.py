@@ -77,10 +77,7 @@ class SearchView(View):
                 return JsonResponse({"data":search_data} , status=200)
 
         except ValueError:
-            return JsonResponse({"ERROR" : "invalid keyword"} , status=400)
-
-        except NoneType:
-            return JsonResponse({"ERROR" : "NONETYPE_ERROR"} , status=400)
+            return JsonResponse({"ERROR" : "INVALID_KEYWORD"} , status=400)
 
         except Exception as e:
             return JsonResponse({"ERROR":e},status=400)
