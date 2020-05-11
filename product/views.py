@@ -47,7 +47,11 @@ class ProductDetailView(View):
             data = (Product.
                     object.
                     filter(id = product_id).
-                    values())
+                    values("id",
+                           "name",
+                           "image",
+                           "price",
+                           "retail_price"))
 
             return JsonResponse({"data" : list(data)} , status=200)
 
@@ -71,7 +75,6 @@ class SearchView(View):
                                values('id' ,
                                       'name' ,
                                       'image',
-                                      'retail_price',
                                       'price'))
 
                 return JsonResponse({"data":search_data} , status=200)

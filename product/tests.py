@@ -22,8 +22,6 @@ class CategoryViewTest(TestCase):
     def test_get_category(self):
         client   = Client()
         response = client.get('/product')
-        print("response : " , response)
-        print("response.json() :" , response.json())
 
         self.assertEqual(
             response.json(),
@@ -67,8 +65,8 @@ class ProductViewTest(TestCase):
 
         CategoryProduct.objects.create(
             id       = 1,
-            category_id = Category.objects.get(id=1),
-            product_id  = Product.objects.get(id=1)
+            category_id = Category.objects.get(id=1).id,
+            product_id  = Product.objects.get(id=1).id
         )
     def tearDown(self):
         Category.objects.all().delete()
@@ -88,7 +86,6 @@ class ProductViewTest(TestCase):
                     "id"           : 1 ,
                     "name"         : "빼빼로",
                     "image"        : "빼빼로 이미지" ,
-                    "price"        : "100",
                     "retail_price" : "200",
                 }
             ]
